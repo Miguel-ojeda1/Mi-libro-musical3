@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#241334">
+<title>Un libro para ti 💜</title>
+<style>
+:root{--bg:#100a18;--panel:#21142e;--panel2:#2c1a3d;--lav:#d8b8ff;--muted:#bca9cc;--gold:#e7c98b;--ink:#f9f1ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#3a2053 0%,#160e20 48%,#09070d 100%);color:var(--ink);font-family:Georgia,"Times New Roman",serif;display:flex;align-items:center;justify-content:center;padding:20px}
+button,input,textarea{font:inherit}
+.app{width:min(100%,980px)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 auto 14px;max-width:850px;font:12px/1.4 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.topline button,.smallbtn{border:1px solid #72578b;background:#21152d;color:#f5e9ff;border-radius:999px;padding:9px 13px;cursor:pointer;font:12px system-ui,sans-serif}
+.book{position:relative;max-width:850px;min-height:560px;margin:auto;perspective:1600px}
+.cover,.page{border:1px solid rgba(231,201,139,.48);border-radius:8px 18px 18px 8px;box-shadow:0 25px 80px #0008,inset 5px 0 8px #ffffff0a;overflow:hidden}
+.cover{min-height:560px;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;cursor:pointer;background:linear-gradient(135deg,#301744,#170e25 55%,#3a1d4b);padding:36px;transition:transform .65s ease,opacity .4s ease}
+.cover-new{border-radius:6px 24px 24px 6px;background:linear-gradient(125deg,#100b1a 0%,#291239 38%,#4a2260 68%,#180e25 100%);box-shadow:0 30px 90px #000a,inset 9px 0 16px #0006,inset -1px 0 #e8c98c55}
+.cover-new:before{inset:17px 19px 17px 28px;border:1px solid #e7c98b99;border-radius:3px 15px 15px 3px}
+.cover-new:after{inset:25px 27px 25px 36px;border:1px solid #e7c98b44;border-radius:2px 11px 11px 2px}
+.cover-mist{position:absolute;inset:0;background:radial-gradient(ellipse at 78% 20%,#b37ad533,transparent 35%),radial-gradient(ellipse at 20% 85%,#a56ad522,transparent 40%);pointer-events:none}
+.cover-arc{position:absolute;border:1px solid #c9a5e433;border-radius:50%;pointer-events:none}
+.arc-one{width:390px;height:390px;right:-120px;top:-130px;box-shadow:0 0 60px #9f70c411}
+.arc-two{width:260px;height:260px;left:-100px;bottom:-120px;border-color:#e7c98b33}
+.cover-side-label{position:absolute;left:10px;top:50%;writing-mode:vertical-rl;transform:rotate(180deg) translateY(50%);font:9px system-ui,sans-serif;letter-spacing:.24em;color:#c7a9d9}
+.covercontent{position:relative;z-index:1;max-width:520px}
+.cover-emblem{display:flex;align-items:center;justify-content:center;gap:18px;color:#e7c98b;margin-bottom:28px;font-size:14px}
+.emblem-moon{font-size:43px;text-shadow:0 0 25px #e7c98b88}
+.cover h1{font-size:clamp(42px,8vw,72px);letter-spacing:-.035em;text-shadow:0 6px 28px #0b0610aa}
+.cover h1 i{font-weight:normal;color:#d8b8ff}
+.cover-rule{display:flex;align-items:center;justify-content:center;gap:12px;color:#e7c98b;margin:22px 0}
+.cover-rule:before,.cover-rule:after{content:"";width:48px;height:1px;background:linear-gradient(90deg,transparent,#e7c98b)}
+.cover-rule:after{transform:rotate(180deg)}
+.open-circle{display:inline-grid;place-items:center;width:35px;height:35px;border:1px solid #e7c98b88;border-radius:50%;font-size:19px;margin-bottom:9px}
+.cover .openhint{line-height:1.4;margin-top:30px;letter-spacing:.16em}
+.cover-bottom{position:absolute;z-index:1;bottom:34px;left:0;right:0;font:9px system-ui,sans-serif;letter-spacing:.25em;color:#bfa4d1}
+.cover-bottom span{color:#e7c98b;margin-left:8px}
+.eyebrow{font:11px system-ui,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+h1{font-size:clamp(36px,7vw,66px);font-weight:normal;line-height:1.04;margin:18px 0;color:#fff4ff}
+.subtitle{font-size:16px;color:#d5c2e3;line-height:1.6}
+.openhint{margin-top:34px;font:12px system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.page{display:none;min-height:560px;background:linear-gradient(135deg,#251633,#170f20 75%);padding:clamp(22px,5vw,52px);position:relative;isolation:isolate}
+.page:before{content:"";position:absolute;left:16px;top:18px;bottom:18px;width:1px;background:linear-gradient(transparent,#c8a6e466,transparent);z-index:-1}
+.pageart{position:absolute;right:0;top:0;width:48%;height:220px;overflow:hidden;pointer-events:none;opacity:.8;z-index:-1;mask-image:linear-gradient(black,transparent)}
+.art-orbit{position:absolute;width:180px;height:180px;border:1px solid var(--accent);border-radius:50%;right:-18px;top:-56px;box-shadow:0 0 40px var(--glow),inset 0 0 30px var(--glow)}
+.art-orbit:before,.art-orbit:after{content:"";position:absolute;border:1px solid var(--accent);border-radius:50%;inset:18px;transform:rotate(35deg) scaleX(.55)}
+.art-orbit:after{inset:36px;transform:rotate(-32deg) scaleX(.7)}
+.art-symbol{position:absolute;right:48px;top:22px;font-size:58px;color:var(--accent);text-shadow:0 0 26px var(--glow)}
+.art-spark{position:absolute;right:34px;top:126px;color:var(--accent);font-size:18px;letter-spacing:.3em}
+.page.theme-0{--accent:#e5c58b;--glow:#e5c58b44;background:radial-gradient(ellipse at 90% 0%,#57345e 0%,transparent 48%),linear-gradient(135deg,#291437,#130d1d 78%)}
+.page.theme-1{--accent:#d4b4ff;--glow:#b68aff55;background:radial-gradient(ellipse at 100% 0%,#3b3d7b 0%,transparent 50%),linear-gradient(145deg,#21133e,#120d20 78%)}
+.page.theme-2{--accent:#b9c8ff;--glow:#9aaaff55;background:radial-gradient(ellipse at 90% 0%,#303d70 0%,transparent 50%),linear-gradient(135deg,#201433,#100d20 80%)}
+.page.theme-3{--accent:#e2a8ef;--glow:#d276f655;background:radial-gradient(ellipse at 100% 0%,#632e70 0%,transparent 52%),linear-gradient(140deg,#32123f,#170d23 78%)}
+.page.theme-4{--accent:#e4b9ff;--glow:#e4b9ff55;background:radial-gradient(ellipse at 95% 0%,#62316e 0%,transparent 50%),linear-gradient(135deg,#29143b,#100b1b 80%)}
+.page.theme-5{--accent:#f1b9e8;--glow:#ed8bdd55;background:radial-gradient(ellipse at 100% 0%,#713d72 0%,transparent 52%),linear-gradient(140deg,#35143c,#140b20 80%)}
+.page.theme-6{--accent:#c8b6ff;--glow:#aa92ff66;background:radial-gradient(ellipse at 95% 0%,#413276 0%,transparent 52%),linear-gradient(135deg,#24143c,#100b1d 80%)}
+.page.theme-7{--accent:#e7c98b;--glow:#e7c98b66;background:radial-gradient(ellipse at 100% 0%,#61384e 0%,transparent 52%),linear-gradient(135deg,#32142f,#130b1b 80%)}
+.page .tracknum{border-color:var(--accent);color:var(--accent)}
+.page .ornament{background:var(--accent)}
+.page .playerwrap{border-color:color-mix(in srgb,var(--accent),transparent 55%)}
+.page.active{display:flex;flex-direction:column;animation:appear .35s ease}
+@keyframes appear{from{opacity:.5;transform:rotateY(-3deg) translateX(8px)}to{opacity:1;transform:none}}
+.pagehead{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--gold);font:10px system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.tracknum{border:1px solid #a98bc055;border-radius:50%;width:36px;height:36px;display:grid;place-items:center;font-size:12px;flex-shrink:0}
+h2{font-size:clamp(30px,5vw,46px);font-weight:normal;line-height:1.1;margin:32px 0 8px}
+.artist{font:14px system-ui,sans-serif;color:var(--lav);letter-spacing:.05em}
+.ornament{width:74px;height:1px;background:var(--gold);margin:24px 0}
+.phrase{font-size:clamp(17px,2.5vw,21px);line-height:1.65;color:#f1e5f8;white-space:pre-wrap}
+.phrase.empty{color:#9e8aa9;font-style:italic}
+.playerwrap{margin:28px 0 12px;padding:14px;background:#120d18;border:1px solid #64477b;border-radius:14px}
+.playerlabel{font:10px system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.spotify{width:100%;height:152px;border:0;border-radius:12px;display:block;background:#20182a}
+.playerplaceholder{min-height:110px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px;color:var(--muted);font:13px/1.5 system-ui,sans-serif}
+.playerplaceholder a{color:#d5b4ff}
+.controls{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:26px}
+.navbtn{border:1px solid #795e8d;background:#2a1938;color:#fff3ff;border-radius:999px;padding:12px 17px;cursor:pointer;font:13px system-ui,sans-serif}
+.navbtn.primary{background:#e1c38c;color:#251630;border-color:#e1c38c}
+.navbtn:disabled{opacity:.35;cursor:not-allowed}
+.counter{font:11px system-ui,sans-serif;color:var(--muted);letter-spacing:.12em}
+.editor{display:none;max-width:850px;margin:16px auto 0;padding:18px;background:#1d1229;border:1px solid #5e4473;border-radius:16px}
+.editor.show{display:block}
+.editor h3{margin:0 0 8px;font-weight:normal}
+.editor p{font:12px/1.5 system-ui,sans-serif;color:var(--muted)}
+.editgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font:11px system-ui,sans-serif;color:var(--lav)}
+.field input,.field textarea{width:100%;border:1px solid #624779;background:#100a18;color:#fff;padding:10px 11px;border-radius:9px;outline:none}
+.field textarea{min-height:82px;resize:vertical;line-height:1.5}
+.field input:focus,.field textarea:focus{border-color:var(--gold)}
+.editactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.footer{text-align:center;color:#9b86aa;font:11px/1.6 system-ui,sans-serif;margin:15px auto 0;max-width:680px}
+@media(max-width:600px){body{padding:12px}.book,.cover,.page{min-height:calc(100svh - 120px);}.cover{padding:24px}.cover-side-label{font-size:8px;left:5px}.cover-bottom{bottom:27px;font-size:8px}.cover-emblem{margin-bottom:22px}.page{padding:25px 22px 24px}.editgrid{grid-template-columns:1fr}.topline{letter-spacing:.08em}.navbtn{padding:11px 13px}.phrase{font-size:17px}}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="topline"><span>Un pequeño universo musical</span><button id="editToggle" type="button">Editar libro ✎</button></div>
+  <section class="book" aria-label="Libro musical">
+    <div class="cover cover-new" id="cover" role="button" tabindex="0" aria-label="Abrir el libro">
+      <div class="cover-mist"></div>
+      <div class="cover-arc arc-one"></div><div class="cover-arc arc-two"></div>
+      <div class="cover-side-label">EDICIÓN ESPECIAL　·　MMXXVI</div>
+      <div class="covercontent">
+        <div class="cover-emblem"><span>✦</span><span class="emblem-moon">☾</span><span>✦</span></div>
+        <div class="eyebrow">Ocho canciones · Una historia</div>
+        <h1>Un libro<br><i>para ti</i></h1>
+        <div class="cover-rule"><span>✧</span></div>
+        <div class="subtitle">Hay canciones que suenan distinto<br>cuando me recuerdan a vos.</div>
+        <div class="openhint"><span class="open-circle">↓</span><br>Toca para abrir</div>
+      </div>
+      <div class="cover-bottom">UNA CANCIÓN A LA VEZ <span>♡</span></div>
+    </div>
+    <article class="page theme-0" id="page" aria-live="polite">
+      <div class="pageart" id="pageart" aria-hidden="true"><span class="art-orbit"></span><span class="art-symbol">☾</span><span class="art-spark">✦　✧　✦</span></div>
+      <div class="pagehead"><span>Una canción para ti</span><span class="tracknum" id="tracknum">01</span></div>
+      <h2 id="songtitle">Mi Santa</h2>
+      <div class="artist" id="artist">Romeo Santos</div>
+      <div class="ornament"></div>
+      <div class="phrase empty" id="phrase">Tu frase aparecerá aquí cuando la escribas.</div>
+      <div class="playerwrap">
+        <div class="playerlabel">Escúchala aquí · Spotify</div>
+        <div id="player"></div>
+      </div>
+      <div class="controls">
+        <button class="navbtn" id="prev" type="button">← Anterior</button>
+        <span class="counter" id="counter">01 / 08</span>
+        <button class="navbtn primary" id="next" type="button">Siguiente →</button>
+      </div>
+    </article>
+  </section>
+  <section class="editor" id="editor">
+    <h3>Personaliza tu libro 💜</h3>
+    <p>Escribe tus frases y pega el enlace de Spotify de cada canción. Los cambios se guardan en este navegador de este dispositivo. Para escuchar música, pega un enlace de una canción, no de una playlist.</p>
+    <div class="editgrid">
+      <div class="field"><label for="editTitle">Título de la canción</label><input id="editTitle" type="text"></div>
+      <div class="field"><label for="editArtist">Artista</label><input id="editArtist" type="text"></div>
+      <div class="field" style="grid-column:1/-1"><label for="editPhrase">Tu frase personal</label><textarea id="editPhrase" placeholder="Escribe aquí por qué esta canción te recuerda a ella..."></textarea></div>
+      <div class="field" style="grid-column:1/-1"><label for="editSpotify">Enlace de Spotify</label><input id="editSpotify" type="url" placeholder="https://open.spotify.com/track/..."></div>
+    </div>
+    <div class="editactions">
+      <button class="navbtn primary" id="saveTrack" type="button">Guardar esta página</button>
+      <button class="navbtn" id="closeEditor" type="button">Cerrar editor</button>
+      <button class="navbtn" id="resetBook" type="button">Restaurar títulos</button>
+    </div>
+    <p>Nota: Spotify puede pedir que ella abra la app o inicie sesión; la reproducción completa depende de las condiciones de su cuenta y del dispositivo.</p>
+  </section>
+  <div class="footer">Hecho con cariño, una canción a la vez. ✦<br>Para compartirlo con ella por enlace, habrá que publicar este archivo en un servicio de alojamiento web.</div>
+</main>
+<script>
+const defaults = [
+ {title:"Mi Santa",artist:"Romeo Santos",phrase:"",spotify:""},
+ {title:"7 Días",artist:"Romeo Santos",phrase:"",spotify:""},
+ {title:"Celeste",artist:"Romeo Santos",phrase:"",spotify:""},
+ {title:"Soy Favela",artist:"La T y La M",phrase:"",spotify:""},
+ {title:"Mamichula",artist:"Trueno",phrase:"",spotify:""},
+ {title:"Ojitos Lindos",artist:"Bad Bunny, Bomba Estéreo",phrase:"",spotify:""},
+ {title:"Inmortal",artist:"Aventura",phrase:"",spotify:""},
+ {title:"La Bella y la Bestia",artist:"Romeo Santos",phrase:"",spotify:""}
+];
+let tracks = defaults.map(x=>({...x}));
+let current=0;
+const $=id=>document.getElementById(id);
+function loadSaved(){
+ try{const saved=localStorage.getItem("unLibroParaTiV1");if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed)&&parsed.length===8)tracks=parsed;}}catch(e){}
+}
+function saveAll(){try{localStorage.setItem("unLibroParaTiV1",JSON.stringify(tracks));}catch(e){}}
+function spotifyEmbed(link){
+ if(!link)return "";
+ try{
+   const u=new URL(link.trim());
+   if(!["open.spotify.com","www.open.spotify.com"].includes(u.hostname))return "";
+   const parts=u.pathname.split("/").filter(Boolean);
+   const kinds=["track","album","playlist","episode","show"];
+   const idx=parts.findIndex(p=>kinds.includes(p));
+   if(idx<0||!parts[idx+1])return "";
+   return "https://open.spotify.com/embed/"+parts[idx]+"/"+parts[idx+1]+"?utm_source=generator&theme=0";
+ }catch(e){return "";}
+}
+function render(){
+ const t=tracks[current];
+ $("tracknum").textContent=String(current+1).padStart(2,"0");
+ $("page").className="page active theme-"+current;
+ const artSymbols=["☾","✧","☼","✦","♬","♡","✴","❦"];
+ $("pageart").querySelector(".art-symbol").textContent=artSymbols[current];
+ $("songtitle").textContent=t.title;
+ $("artist").textContent=t.artist;
+ $("phrase").textContent=t.phrase||"Tu frase aparecerá aquí cuando la escribas.";
+ $("phrase").classList.toggle("empty",!t.phrase);
+ $("counter").textContent=String(current+1).padStart(2,"0")+" / "+String(tracks.length).padStart(2,"0");
+ $("prev").disabled=current===0;
+ $("next").textContent=current===tracks.length-1?"Volver a la portada ↗":"Siguiente →";
+ const embed=spotifyEmbed(t.spotify);
+ $("player").innerHTML="";
+ if(embed){
+   const frame=document.createElement("iframe");
+   frame.className="spotify";frame.src=embed;frame.title="Reproductor de Spotify: "+t.title;
+   frame.allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+   frame.loading="lazy";frame.setAttribute("frameborder","0");
+   $("player").appendChild(frame);
+ }else{
+   const placeholder=document.createElement("div");placeholder.className="playerplaceholder";
+   placeholder.innerHTML='<span style="font-size:28px;color:#d8b8ff">♫</span><span>Añade el enlace de Spotify para esta canción<br>desde <b>Editar libro</b>.</span>';
+   $("player").appendChild(placeholder);
+ }
+}
+function openBook(){ $("cover").style.display="none";$("page").classList.add("active");render(); }
+function goNext(){if(current<tracks.length-1){current++;render();}else{$("page").classList.remove("active");$("cover").style.display="flex";}}
+function goPrev(){if(current>0){current--;render();}else{$("page").classList.remove("active");$("cover").style.display="flex";}}
+function fillEditor(){const t=tracks[current];$("editTitle").value=t.title;$("editArtist").value=t.artist;$("editPhrase").value=t.phrase;$("editSpotify").value=t.spotify;}
+function saveTrack(){
+ tracks[current]={title:$("editTitle").value.trim()||defaults[current].title,artist:$("editArtist").value.trim()||defaults[current].artist,phrase:$("editPhrase").value.trim(),spotify:$("editSpotify").value.trim()};
+ saveAll();render();
+}
+$("cover").addEventListener("click",openBook);
+$("cover").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openBook();}});
+$("next").addEventListener("click",goNext);$("prev").addEventListener("click",goPrev);
+$("editToggle").addEventListener("click",()=>{$("editor").classList.toggle("show");fillEditor();});
+$("closeEditor").addEventListener("click",()=>$("editor").classList.remove("show"));
+$("saveTrack").addEventListener("click",saveTrack);
+$("resetBook").addEventListener("click",()=>{if(confirm("¿Restaurar títulos y artistas? Esto también borrará las frases y enlaces guardados en este navegador.")){tracks=defaults.map(x=>({...x}));saveAll();fillEditor();render();}});
+document.addEventListener("keydown",e=>{if($("page").classList.contains("active")&&e.key==="ArrowRight")goNext();if($("page").classList.contains("active")&&e.key==="ArrowLeft")goPrev();});
+loadSaved();render();
+</script>
+</body>
+</html>
